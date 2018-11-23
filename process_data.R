@@ -21,7 +21,7 @@ download.file(url = "https://goo.gl/ZRCBda",
               mode = "wb")
 
 unzip("poll-results.zip")
-file_delete("master.zip")
+file_delete("poll-results.zip")
 
 my_list <- dir_ls("2018-live-poll-results-master/data/")
 
