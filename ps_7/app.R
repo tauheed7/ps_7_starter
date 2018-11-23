@@ -10,6 +10,8 @@
 library(shiny)
 library(tidyverse)
 
+##Here I downloaded all necessary libraries. Below I read in the data and created "choices" for the variables I'm going to use for the app. 
+
 all_data <- read_rds("ps_7_data.rds")
 
 education_choices <- all_data %>% 
@@ -36,6 +38,9 @@ ui <- fluidPage(
                                  selected = "High school")
                    ),
                    
+##Here I added a title and my desired inputs of District and Education which will show on my graphics. Below I made it to where 
+## there would be two tabs, one for general information about my app and another with the actual graphics. I got this tabs idea from Ms. Lupion's app. 
+                   
                    mainPanel(
                      tabsetPanel(type = "tabs",
                                  tabPanel("About This App", 
@@ -54,6 +59,9 @@ server <- function(input, output) {
   output$plot <- renderPlot({
     
     req(input$education, input$join)
+    
+##Here I am rendering the plot that I'd like to show by bringing in my desired outputs and manipulating the data so that I have education 
+# and location. I then created a dataframe for my bar graph and used the ggplot function and new data frame to create the desired graphs. 
     
     data <- all_data %>% 
       filter(educ == input$education, join == input$join)

@@ -2,8 +2,8 @@ library(readr)
 library(tidyverse)
 library(fs)
 library(stringr)
-library(scales)
 
+#Here I downloaded all the necessary libraries.
 
 
 mt_2_results <- read_csv("mt_2_results.csv") %>% 
@@ -16,6 +16,9 @@ mt_2_results <- read_csv("mt_2_results.csv") %>%
   filter(total != 0) %>% 
   unite("join", c("state", "district"), sep = "-", remove = FALSE)
 
+#Here I read in Mr. Schroeder's data, filtered out non-Congressional races and created some new desired variables. 
+#I also used the unite function to help me join two datasets together later. 
+
 download.file(url = "https://goo.gl/ZRCBda",
               destfile = "poll-results.zip",
               quiet = TRUE, 
@@ -24,7 +27,11 @@ download.file(url = "https://goo.gl/ZRCBda",
 unzip("poll-results.zip")
 file_delete("poll-results.zip")
 
+#Here I downloaded, unzipped, and deleted data to keep my repo clean.
+
 my_list <- dir_ls("2018-live-poll-results-master/data/")
+
+#This function allowed me to create a list of all the file names of races.
 
 x <- map_dfr(my_list, read_csv, .id = "name") %>% 
   filter(!str_detect(name, ("gov")), !str_detect(name, ("sen"))) %>% 
@@ -43,9 +50,18 @@ x <- map_dfr(my_list, read_csv, .id = "name") %>%
          predicted_rep = Rep/Total * 100,
          predicted_other = Und/Total * 100)
 
+#Here I mapped all the data from the file names to a new dataframe x and 
+# did a lot of data manipulation in order to eventually show the difference in polling results of voter education.
+# I created a few variables to get percentages of vote shares, spread by response, grouped by my 3 desired variables, 
+# and filtered out undesired information. 
+
 all_data <- left_join(x, mt_2_results, by = "join")
 
+#I joined the two datasets here. 
+
 write_rds(all_data, path = "ps_7/ps_7_data.rds")
+
+#This will allow me to read in the data in my shiny app.
 
 
 
